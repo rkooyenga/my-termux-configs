@@ -1,0 +1,37 @@
+#!/data/data/com.termux/files/usr/bin/env bash
+
+url=$1
+echo "What to do with $url ?"
+echo "d) Download web video to movies folder"
+echo "r) Read news URL in text browser, bypass paywall"
+echo "i) Inspect local media file"
+echo "t) **reserved for debugging tests**"
+read CHOICE 
+
+case $CHOICE in
+
+  d|D)
+   cd "/storage/emulated/0/Movies/Youtube"
+   yt-dlp -f best "${url}"
+   termux-notification -t "Download complete" -c "completed YouTube download $url"
+   ;; 
+
+  r|R)
+   elinks "${url}"
+   ;;
+
+  i|I)
+   mediainfo "${url}"|less
+   ;;
+
+  t|T)
+   title="/${url#*/}"
+   title="${url%% *}"
+   echo "$url"|less
+   ;;
+
+  *)
+   echo "Sorry, that's invalid."
+   exit 65 
+   ;;
+esac
